@@ -25,9 +25,7 @@ jobs:
       
       - name: Install dependencies
         run: npm install
-      
-      - name: Build Docker image
-        run: docker build -t auth-service-test .
+
       - name: Create .env file
         run: |
             echo "PGHOST=${{ secrets.PGHOST }}" >> .env
@@ -46,8 +44,14 @@ jobs:
       - name: Run all dependent services in seperate containers
         run: docker compose up -d
 
-      - name: Run test inside the container
-        run: docker compose exec auth-service-test npm test
+      - name: Build and run containers
+        run: docker compose up -d --build auth db nginx
+
+      - name: Run tests
+        run: docker compose exec talkloop-auth-service npm test
+        
+
+        
 
 
 
