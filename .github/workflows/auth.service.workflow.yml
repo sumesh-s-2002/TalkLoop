@@ -48,8 +48,11 @@ jobs:
       - name: Build and run containers
         run: docker compose up -d --build
 
-      - name: Run tests
-        run: docker compose exec auth-service npm test
+      - name: Run tests inside container
+        run: docker compose exec auth-service npm test -- --runInBand --detectOpenHandles --forceExit
+
+      - name: Shut down containers
+        run: docker compose down
         
 
         
