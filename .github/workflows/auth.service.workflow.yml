@@ -29,8 +29,11 @@ jobs:
       - name: Build Docker image
         run: docker build -t auth-service-test .
 
-      - name: Run test inside the docker container
-        run: docker run --rm auth-service-test npm test
+      - name: Run all dependent services in seperate containers
+        run: docker compose up
+
+      - name: Run test inside the container
+        run: npm test
 
 
 
