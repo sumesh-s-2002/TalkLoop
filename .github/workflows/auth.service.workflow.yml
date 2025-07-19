@@ -38,6 +38,11 @@ jobs:
             echo "PORT=${{ secrets.PORT }}" >> .env
             echo "APP_BASE_URL=${{ secrets.APP_BASE_URL }}" >> .env
             echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+            echo "SMTP_HOST=${{ secrets.SMTP_HOST }}" >> .env
+            echo "SMTP_PORT=${{ secrets.SMTP_PORT }}" >> .env
+            echo "SMTP_PASS=${{ secrets.SMTP_PASS }}" >> .env
+            echo "MAIL_FROM=${{ secrets.MAIL_FROM }}" >> .env
+            echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
       - name: Run all dependent services in seperate containers
         run: docker compose up
 
