@@ -44,7 +44,7 @@ jobs:
             echo "MAIL_FROM=${{ secrets.MAIL_FROM }}" >> .env
             echo "SMTP_USER=${{ secrets.SMTP_USER }}" >> .env
       - name: Run all dependent services in seperate containers
-        run: docker compose up
+        run: docker compose up -d
 
       - name: Run test inside the container
         run: npm test
