@@ -47,7 +47,8 @@ jobs:
         run: docker compose up -d
 
       - name: Run test inside the container
-        run: npm test
+        run: docker-compose exec auth-service-test npm test
+
 
 
 
