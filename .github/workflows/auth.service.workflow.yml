@@ -45,7 +45,7 @@ jobs:
         run: docker compose up -d
 
       - name: Build and run containers
-        run: docker compose up -d --build auth db nginx
+        run: docker compose up -d --build
 
       - name: Run tests
         run: docker compose exec talkloop-auth-service npm test
