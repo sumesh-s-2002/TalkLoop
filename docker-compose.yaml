@@ -19,7 +19,7 @@ services:
     command: npm run migrate
     volumes:
       - ./services/auth-service:/app
-      - ./services/db/migrations:/app/migrations
+      - ./services/auth-service/src/db/migrations:/app/migrations
       - /app/node_modules
     env_file: ./services/auth-service/.env
     depends_on:
@@ -33,7 +33,7 @@ services:
       POSTGRES_USER: dev
       POSTGRES_PASSWORD: dev
       POSTGRES_DB: authDB
-    ports: ["5432:5432"]
+    ports: ["5433:5432"]
 
   nginx:
     image: nginx

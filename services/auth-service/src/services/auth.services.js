@@ -8,7 +8,7 @@ import * as TokenModel from "../models/token.model.js"
 import * as TokenService from "./token.service.js"
 import * as EmailModel from "../models/email.model.js"
 import * as passwordModel from "../models/password.model.js"
-import { sendVerificationEmail } from "./email.service.js"
+import { sendVerificationEmail, sendTestMails } from "./email.service.js"
 import pool from "../db/pool.js"
 
 
@@ -16,8 +16,8 @@ export async function signup({ email, username, password }) {
     const client = await pool.connect();
     try {
         await client.query("BEGIN");
-        const existing = await UserModel.findByEmail(email);
-        assert(!existing, ConflictError, "Email already registered!");
+        const user_id = await UserModel.findByEmail(email, client);
+        assert(!user_id, ConflictError, "Email already registered!");
 
         const passwordHash = await hashPassword(password);
         const userId = await UserModel.insertUser({ username, email, passwordHash }, client);
@@ -30,7 +30,7 @@ export async function signup({ email, username, password }) {
 
         const link = `${env.base_url}/api/auth/verify-email/${token}`
         const text = "Verify your Email";
-        await sendVerificationEmail(email, link, text);
+        await sendTestMails(email, link, text);
 
         await EmailModel.storeVerificationToken({ uuid: id, user_id: userId, hashedToken, expires_at: expires }, client);
         await TokenModel.storeRefreshToken({ userId, tokenHash, expiresAt, jti }, client);
@@ -39,7 +39,8 @@ export async function signup({ email, username, password }) {
         return { accesToken, refreshToken }
     } catch (err) {
         if (client) await client.query('ROLLBACK');
-        console.error("Unable to create user!", err);
+        console.log(err);
+        // console.error("Unable to create user!", err);
         throw err;
     } finally {
         client.release();

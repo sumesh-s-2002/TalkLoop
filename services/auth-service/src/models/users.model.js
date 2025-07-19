@@ -17,9 +17,9 @@ export async function disableUser(username) {
     );
 }
 
-export async function findByEmail(email) {
-    const sql = `SELECT * FROM users WHERE email = $1 LIMIT 1`;
-    const { rows } = await pool.query(sql, [email]);
+export async function findByEmail(email, client) {
+    const sql = `SELECT id FROM users WHERE email = $1 LIMIT 1`;
+    const { rows } = await client.query(sql, [email]);
     if (rows.length === 0) return null;
     return rows[0].id;
 }

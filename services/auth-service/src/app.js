@@ -21,6 +21,4 @@ app.get("/test", authMiddleware, (req, res) => {
 })
 app.get("/healthz", (_, res) => res.send("OK"));
 
-
-
 export default app;

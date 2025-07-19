@@ -1,4 +1,5 @@
 import pool from "../db/pool.js";
+import  { BadRequestError, UnauthorizedError } from "../../shared/utils/httpErrors.js"
 
 export async function storeRefreshToken({ userId, tokenHash, expiresAt, jti }, client) {
     const query = `
@@ -24,7 +25,7 @@ export async function MarkAsRevoked({ jti }, client) {
     `
     try {
         const { rowCount } = await client.query(query, [jti]);
-        if (rowCount != 1) throw Error("failed to mark as revoked");
+        if (rowCount != 1) throw Error("invalide refresh token");
     } catch (err) {
         console.log(e);
     }
