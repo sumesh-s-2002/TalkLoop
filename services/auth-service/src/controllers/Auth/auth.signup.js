@@ -8,8 +8,8 @@ export async function signupController(req, res, next) {
         assert(data && data.username,BadRequestError, "Username is required");
         assert(data && data.password,BadRequestError,"Password is required");
 
-        const { accesToken, refreshToken } = await signup({ email: data.email, username: data.username, password: data.password });
-        return res.status(201).json({ accessToken : accesToken, refreshToken });
+        const { accesToken, refreshToken, user } = await signup({ email: data.email, username: data.username, password: data.password });
+        return res.status(201).json({ accessToken : accesToken, refreshToken, user });
     } catch (e) {
         return next(e);
     }

@@ -26,9 +26,9 @@ export async function findByEmail(email, client) {
 
 export async function findByUsername(username) {
     const sql = `SELECT * FROM users WHERE username = $1 LIMIT 1`;
-    const user = await pool.query(sql, [username]);
-    if (user.rows.length === 0) return null;
-    return user;
+    const { rows } = await pool.query(sql, [username]);
+    if (rows.length != 1) return null;
+    return rows[0].id;
 }
 
 export async function MarkAsVerified(user_id, client) {

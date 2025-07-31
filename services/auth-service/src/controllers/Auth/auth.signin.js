@@ -6,8 +6,8 @@ export async function signinController(req, res, next) {
     try {
         assert(data && data.username,BadRequestError, "Username is required");
         assert(data && data.password,BadRequestError, "Password is required");
-        const { accessToken, refreshToken } = await signin({ username: data.username, password: data.password });
-        return res.status(200).json({ accessToken, refreshToken });
+        const { accessToken, refreshToken, user } = await signin({ username: data.username, password: data.password });
+        return res.status(200).json({ accessToken, refreshToken, user});
     } catch (e) {
         return next(e);
     }

@@ -3,8 +3,12 @@ import crypto from "crypto"
 import { env } from "../config/env.js";
 import { REFRESH_TTL, ACCESS_TTL, VERIFICATION_TTL } from "../config/constant.js"
 
-export function generateAccessToken(userId) {
-    return jwt.sign({ userId }, env.jwt_secret, { expiresIn: ACCESS_TTL });
+export function generateAccessToken(userId, username) {
+    const payload = {
+        id : userId,
+        username : username
+    };
+    return jwt.sign(payload, env.jwt_secret, { expiresIn: ACCESS_TTL });
 }
 
 export function generateRefreshToken() {

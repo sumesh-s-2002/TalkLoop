@@ -23,7 +23,7 @@ export async function signup({ email, username, password }) {
         const userId = await UserModel.insertUser({ username, email, passwordHash }, client);
         assert(userId, BadRequestError, "user Insertion error!");
 
-        const accesToken = TokenService.generateAccessToken(userId);
+        const accesToken = TokenService.generateAccessToken(userId, username);
         const { refreshToken, tokenHash, expiresAt, jti } = TokenService.generateRefreshToken();
         const { token, expiresAt: expires, id } = TokenService.generateVerificationToken();
         const hashedToken = await hashPassword(token);
@@ -36,11 +36,10 @@ export async function signup({ email, username, password }) {
         await TokenModel.storeRefreshToken({ userId, tokenHash, expiresAt, jti }, client);
         await client.query("COMMIT");
 
-        return { accesToken, refreshToken }
+        return { accesToken, refreshToken, user : {userId, username}};
     } catch (err) {
         if (client) await client.query('ROLLBACK');
         console.log(err);
-        // console.error("Unable to create user!", err);
         throw err;
     } finally {
         client.release();
@@ -50,8 +49,8 @@ export async function signup({ email, username, password }) {
 export async function signin({ username, password }) {
     try {
         const client = await pool.connect();
-        const user = await UserModel.findByUsername(username);
-        if (!user) {
+        const user_id = await UserModel.findByUsername(username);
+        if (!user_id) {
             throw new UnauthorizedError("Username is not valid!");
         }
 
@@ -64,7 +63,7 @@ export async function signin({ username, password }) {
         const { refreshToken, tokenHash, expiresAt, jti } = TokenService.generateRefreshToken();
         await TokenModel.storeRefreshToken({ userId: user.rows[0].id, tokenHash, expiresAt, jti }, client);
 
-        return { accessToken, refreshToken };
+        return { accessToken, refreshToken, user : {userId : user_id, username: username}};
     } catch (err) {
         console.error("Unable to sign in!", err);
         throw err;

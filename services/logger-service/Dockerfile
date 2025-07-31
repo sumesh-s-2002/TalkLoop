@@ -2,11 +2,13 @@ FROM node:20-slim As prod
 WORKDIR /app
 
 ENV NODE_ENV=production \
-    PORT=4000
+    PORT=9000
 
 COPY ./package* .
-RUN npm install
+RUN npm ci
 
 COPY . .
-EXPOSE 4000
-CMD ["node", "src/server.js"]
+
+EXPOSE 9000
+CMD ["npm", "run", "dev"]
+
