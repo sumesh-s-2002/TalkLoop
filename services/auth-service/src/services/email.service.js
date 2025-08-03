@@ -1,5 +1,5 @@
-import nodemailer from "nodemailer"
-import { env } from '../config/env.js';
+import nodemailer from "nodemailer";
+import { env } from "../config/env.js";
 
 const transporter = nodemailer.createTransport({
   host: env.smptp_host,
@@ -28,8 +28,8 @@ export async function sendVerificationEmail(to, link, text) {
   }
 }
 
-export async function sendTestMails(to, link, text){
-  try{  
+export async function sendTestMails(to, link, text) {
+  try {
     const testAccount = await nodemailer.createTestAccount();
     const transporter = nodemailer.createTransport({
       host: testAccount.smtp.host,
@@ -37,17 +37,16 @@ export async function sendTestMails(to, link, text){
       secure: testAccount.smtp.secure,
       auth: {
         user: testAccount.user,
-        pass:testAccount.pass
-      }
-    })
+        pass: testAccount.pass,
+      },
+    });
 
     const info = await transporter.sendMail({
       from: `"Test" <test@example.com>`,
       to: to,
       subject: text,
-      html: `<p>Pleae click to verify:</p><a href="${link}">${link}</a>`
-    })
-
+      html: `<p>Pleae click to verify:</p><a href="${link}">${link}</a>`,
+    });
   } catch (err) {
     console.error(`Failed to send the test mail tol:${to}`, err);
     throw err;
